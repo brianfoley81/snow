@@ -1,62 +1,76 @@
-var canvas = document.getElementById('stage');
-var ctx = canvas.getContext('2d');
-var FPS = 60;
-var frame = 0;
-var cloud = [];
+require('./app.css');
+Flake = require('./flake.js');
 
-// cross browser fun!
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
-canvas.style.height = window.innerHeight + "px";
-canvas.style.width = window.innerWidth + "px";
+var App = function () {
+
+	this.canvas = document.getElementById('stage');
+	this.ctx = this.canvas.getContext('2d');
+	this.FPS = 60;
+	this.frame = 0;
+	this.cloud = [];
+
+	// cross browser fun!
+	this.canvas.height = window.innerHeight;
+	this.canvas.width = window.innerWidth;
+	this.canvas.style.height = window.innerHeight + "px";
+	this.canvas.style.width = window.innerWidth + "px";
+
+	this.tick();
+}
 
 // refresh the stage
-var clear = function () {
-	if (frame == 60) {frame = 0;} else {frame++;}
-	ctx.fillStyle = "rgba(0, 0, 0, 1)";
-	ctx.fillRect(0, 0, canvas.width, canvas.height); 
+App.prototype.clear = function () {
+	if (this.frame == 60) {this.frame = 0;} else {this.frame++;}
+	this.ctx.fillStyle = "rgba(0, 0, 0, 1)";
+	this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height); 
 
-	// remove flakes that have gone off screen
-	cloud = cloud.filter(function(f){
-		return (f.y < canvas.height && f.x < canvas.width && f.x > -10);
-	});
+	this.cloud = this.cloud.filter(function(f){
+		return (f.y < this.canvas.height && f.x < this.canvas.width && f.x > -10);
+	}.bind(this));
 }
 
 // Draw debugging text
-var drawDebug = function() {
-	var txt = cloud.length + " / " + frame;
+App.prototype.drawDebug = function() {
+	var txt = this.cloud.length + " / " + this.frame;
 
-	ctx.font = "24px courier";
-	ctx.fillStyle = "red";
-	ctx.fillText(txt, 2, 20);
+	this.ctx.font = "24px courier";
+	this.ctx.fillStyle = "red";
+	this.ctx.fillText(txt, 2, 20);
 }
 
-var drawStorm = function () {
-	cloud.forEach(function (f) {
+// Trigger the flakes' actions
+App.prototype.drawStorm = function () {
+	this.cloud.forEach(function (f) {
 		f.update();	
-	});
+		this.ctx.fillStyle = "rgba(255, 255, 255, " + f.alpha +")";
+		this.ctx.beginPath();
+		this.ctx.arc(f.x, f.y, f.size, 0, 2 * Math.PI);
+		this.ctx.fill();
+	}, this);
 }
 
-var addFlake = function () {
-	if ((frame % 10) === 0) {
-		cloud.push(new Flake({}));
+// Make a new flake!
+App.prototype.addFlake = function () {
+	if ((this.frame % 10) === 0) {
+		this.cloud.push(new Flake({}));
 	}
 }
 
-
-
-
-var tick = function () {
-	clear();
+// Each tick of the stage's clock
+App.prototype.tick = function () {
+	this.clear();
 	//drawDebug();
-	addFlake();
-	drawStorm();
-	setTimeout(tick, FPS / 1000);
+	this.addFlake();
+	this.drawStorm();
 };
 
 
 
-//I stole this from the internets!
-var getRandomInt = function (min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+//------Loop it------------
+var theApp = new App();
+(theloop = function() {
+	theApp.tick();
+	window.setTimeout( theloop, (theApp.FPS / 1000) );
+})();
+//------Loop it------------
+
