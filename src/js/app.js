@@ -1,4 +1,4 @@
-require('./app.css');
+require('../css/app.css');
 Flake = require('./flake.js');
 
 var App = function () {
