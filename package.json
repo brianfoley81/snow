@@ -1,0 +1,25 @@
+{
+  "name": "snow",
+  "version": "1.0.0",
+  "description": "Just some canvas based snow",
+  "main": "webpack.config.js",
+  "dependencies": {
+    "webpack": "^1.12.13",
+    "style-loader": "^0.13.0",
+    "css-loader": "^0.23.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brianfoley81/snow.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brianfoley81/snow/issues"
+  },
+  "homepage": "https://github.com/brianfoley81/snow#readme"
+}
