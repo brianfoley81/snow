@@ -15,6 +15,6 @@ Flake.prototype.update = function () {
 // I stole this from the internets!
 Flake.prototype.getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+}; 
 
 module.exports = Flake;
